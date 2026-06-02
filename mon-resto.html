@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Mon Resto"/>
+<title>Mon Resto</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:#0a1628;color:#f1f5f9;font-family:'Outfit',sans-serif;min-height:100vh;overflow-x:hidden;}
+
+/* NAV BAS MOBILE */
+#app{display:flex;flex-direction:column;min-height:100vh;}
+#content{flex:1;padding:20px 16px 90px;}
+#bottomnav{position:fixed;bottom:0;left:0;right:0;background:#0f1e35;border-top:1px solid rgba(255,255,255,0.08);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom);}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px 8px;cursor:pointer;color:#475569;font-size:10px;font-weight:600;gap:3px;transition:color 0.2s;}
+.nav-item.active{color:#f0c040;}
+.nav-item .icon{font-size:20px;}
+.nav-badge{background:#ef4444;color:#fff;border-radius:10px;font-size:9px;padding:1px 5px;position:absolute;top:6px;right:50%;transform:translateX(8px);}
+
+/* HEADER */
+.page-header{margin-bottom:20px;}
+.page-title{font-size:22px;font-weight:800;color:#f0c040;line-height:1.2;}
+.page-sub{color:#64748b;font-size:12px;margin-top:2px;}
+
+/* CARDS */
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;}
+.card+.card{margin-top:12px;}
+
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.kpi{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px;}
+.kpi-icon{font-size:20px;margin-bottom:4px;}
+.kpi-value{font-size:20px;font-weight:800;line-height:1;}
+.kpi-label{color:#94a3b8;font-size:11px;margin-top:4px;}
+.kpi-sub{color:#64748b;font-size:10px;margin-top:2px;}
+
+/* FORMS */
+.form-group{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;}
+label{color:#94a3b8;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+input,select{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:8px;color:#f1f5f9;padding:10px 12px;font-size:15px;font-family:'Outfit',sans-serif;outline:none;width:100%;transition:border 0.2s;-webkit-appearance:none;}
+select{background:#1a2a42;}
+input:focus{border-color:#f0c040;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.total-preview{background:rgba(240,192,64,0.1);border:1px solid rgba(240,192,64,0.25);border-radius:8px;padding:10px 12px;}
+.total-preview .tl{color:#64748b;font-size:10px;}
+.total-preview .tv{color:#f0c040;font-weight:800;font-size:18px;}
+
+/* BUTTONS */
+.btn{border:none;border-radius:10px;padding:12px 20px;font-weight:700;font-size:14px;cursor:pointer;font-family:'Outfit',sans-serif;width:100%;margin-top:4px;}
+.btn-primary{background:#f0c040;color:#0f172a;}
+.btn-danger{background:#ef4444;color:#fff;padding:6px 12px;width:auto;font-size:12px;}
+.btn-sm{padding:5px 10px;font-size:11px;width:auto;}
+
+/* BADGES */
+.badge{border-radius:6px;padding:2px 8px;font-size:11px;font-weight:700;}
+
+/* TABLE MOBILE */
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:400px;}
+th{padding:8px 10px;color:#64748b;font-weight:600;text-align:left;border-bottom:1px solid rgba(255,255,255,0.06);font-size:10px;text-transform:uppercase;letter-spacing:0.8px;white-space:nowrap;}
+td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,0.04);color:#cbd5e1;white-space:nowrap;}
+.td-name{color:#f1f5f9;font-weight:600;}
+.td-green{color:#22c55e;font-weight:700;}
+.td-yellow{color:#f59e0b;font-weight:700;}
+.td-red{color:#ef4444;font-weight:700;}
+.td-purple{color:#a78bfa;font-weight:700;}
+.table-footer{margin-top:10px;color:#64748b;font-size:12px;text-align:right;}
+
+/* ALERT */
+.alert-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:13px;}
+.row-between{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:13px;}
+
+/* BARCHART */
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:80px;margin-top:8px;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.bar{width:100%;background:#f0c040;border-radius:4px 4px 0 0;min-height:3px;opacity:0.85;}
+.bar-lbl{font-size:9px;color:#64748b;}
+
+/* SAVE TOAST */
+#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;padding:8px 20px;border-radius:20px;font-size:13px;font-weight:700;z-index:999;opacity:0;transition:opacity 0.3s;pointer-events:none;}
+#toast.show{opacity:1;}
+
+/* SECTION TITLE */
+.section-title{font-weight:700;font-size:14px;color:#e2e8f0;margin-bottom:12px;}
+
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+</style>
+</head>
+<body>
+
+<div id="toast">✅ Sauvegardé</div>
+
+<div id="app">
+  <div id="content"></div>
+  <nav id="bottomnav">
+    <div class="nav-item active" onclick="goTo('dashboard')" id="nav-dashboard">
+      <span class="icon">📊</span><span>Tableau</span>
+    </div>
+    <div class="nav-item" onclick="goTo('stock')" id="nav-stock" style="position:relative">
+      <span class="icon">📦</span><span>Stock</span>
+      <span id="stock-badge" class="nav-badge" style="display:none">0</span>
+    </div>
+    <div class="nav-item" onclick="goTo('achats')" id="nav-achats">
+      <span class="icon">🛒</span><span>Achats</span>
+    </div>
+    <div class="nav-item" onclick="goTo('ventes')" id="nav-ventes">
+      <span class="icon">🍽️</span><span>Ventes</span>
+    </div>
+    <div class="nav-item" onclick="goTo('bilan')" id="nav-bilan">
+      <span class="icon">📈</span><span>Bilan</span>
+    </div>
+  </nav>
+</div>
+
+<script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+const KEY_STOCK  = 'resto_stock';
+const KEY_ACHATS = 'resto_achats';
+const KEY_VENTES = 'resto_ventes';
+
+let stock = JSON.parse(localStorage.getItem(KEY_STOCK) || 'null') || [
+  {id:1,nom:"Farine",cat:"Sec",qte:25,unite:"kg",seuil:10,pu:1.2},
+  {id:2,nom:"Huile d'olive",cat:"Liquide",qte:8,unite:"L",seuil:5,pu:4.5},
+  {id:3,nom:"Tomates",cat:"Frais",qte:15,unite:"kg",seuil:8,pu:2.3},
+  {id:4,nom:"Poulet",cat:"Viande",qte:12,unite:"kg",seuil:6,pu:6.8},
+  {id:5,nom:"Fromage",cat:"Laitier",qte:4,unite:"kg",seuil:3,pu:9.2},
+  {id:6,nom:"Pâtes",cat:"Sec",qte:30,unite:"kg",seuil:15,pu:1.8},
+];
+let achats = JSON.parse(localStorage.getItem(KEY_ACHATS) || 'null') || [
+  {id:1,date:"2026-05-28",fourn:"Metro",art:"Farine",qte:20,pu:1.2,total:24},
+  {id:2,date:"2026-05-29",fourn:"Rungis",art:"Poulet",qte:15,pu:6.5,total:97.5},
+  {id:3,date:"2026-05-30",fourn:"Metro",art:"Pâtes",qte:25,pu:1.8,total:45},
+  {id:4,date:"2026-06-01",fourn:"Rungis",art:"Tomates",qte:10,pu:2.3,total:23},
+];
+let ventes = JSON.parse(localStorage.getItem(KEY_VENTES) || 'null') || [
+  {id:1,date:"2026-05-28",plat:"Pâtes bolognaise",qte:18,pu:14,total:252},
+  {id:2,date:"2026-05-29",plat:"Poulet rôti",qte:12,pu:18,total:216},
+  {id:3,date:"2026-05-30",plat:"Pizza margherita",qte:22,pu:13,total:286},
+  {id:4,date:"2026-06-01",plat:"Salade César",qte:15,pu:11,total:165},
+  {id:5,date:"2026-06-02",plat:"Pâtes bolognaise",qte:20,pu:14,total:280},
+];
+
+const CATS = ["Sec","Liquide","Frais","Viande","Laitier","Autre"];
+const CCAT = {Sec:"#f59e0b",Liquide:"#3b82f6",Frais:"#22c55e",Viande:"#ef4444",Laitier:"#a78bfa",Autre:"#94a3b8"};
+
+let page = 'dashboard';
+
+// ─── UTILS ──────────────────────────────────────────────────────────────────
+const fmt = n => (typeof n==='number'?n:0).toFixed(2).replace('.',',') + ' €';
+const today = () => new Date().toISOString().split('T')[0];
+const uid = () => Date.now() + Math.random();
+
+function save() {
+  localStorage.setItem(KEY_STOCK,  JSON.stringify(stock));
+  localStorage.setItem(KEY_ACHATS, JSON.stringify(achats));
+  localStorage.setItem(KEY_VENTES, JSON.stringify(ventes));
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1500);
+}
+
+// ─── NAVIGATION ─────────────────────────────────────────────────────────────
+function goTo(p) {
+  page = p;
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById('nav-'+p).classList.add('active');
+  render();
+  window.scrollTo(0,0);
+}
+
+// ─── RENDER ─────────────────────────────────────────────────────────────────
+function render() {
+  const alertes = stock.filter(s=>s.qte<=s.seuil);
+  const badge = document.getElementById('stock-badge');
+  if(alertes.length>0){badge.style.display='block';badge.textContent=alertes.length;}
+  else badge.style.display='none';
+
+  const el = document.getElementById('content');
+  if(page==='dashboard') el.innerHTML = renderDashboard();
+  else if(page==='stock')  el.innerHTML = renderStock();
+  else if(page==='achats') el.innerHTML = renderAchats();
+  else if(page==='ventes') el.innerHTML = renderVentes();
+  else if(page==='bilan')  el.innerHTML = renderBilan();
+  bindEvents();
+}
+
+// ─── DASHBOARD ──────────────────────────────────────────────────────────────
+function renderDashboard() {
+  const tv = ventes.reduce((s,v)=>s+v.total,0);
+  const ta = achats.reduce((s,a)=>s+a.total,0);
+  const marge = tv - ta;
+  const vs = stock.reduce((s,p)=>s+p.qte*p.pu,0);
+  const alertes = stock.filter(s=>s.qte<=s.seuil);
+
+  // bar chart
+  const vpj = {};
+  ventes.forEach(v=>{ vpj[v.date]=(vpj[v.date]||0)+v.total; });
+  const jours = Object.entries(vpj).sort(([a],[b])=>a.localeCompare(b)).slice(-5);
+  const maxV = Math.max(...jours.map(([,v])=>v),1);
+  const bars = jours.map(([j,v])=>`
+    <div class="bar-col">
+      <div class="bar-lbl">${fmt(v).replace(' €','')}</div>
+      <div class="bar" style="height:${Math.max(4,(v/maxV)*60)}px"></div>
+      <div class="bar-lbl">${j.slice(5)}</div>
+    </div>`).join('');
+
+  // top plats
+  const byPlat = {};
+  ventes.forEach(v=>{ byPlat[v.plat]=(byPlat[v.plat]||0)+v.total; });
+  const topPlats = Object.entries(byPlat).sort(([,a],[,b])=>b-a).slice(0,4)
+    .map(([p,t],i)=>`<div class="row-between"><span style="color:${i===0?'#f0c040':'#cbd5e1'}">${i+1}. ${p}</span><span class="td-green">${fmt(t)}</span></div>`).join('');
+
+  return `
+  <div class="page-header">
+    <div style="font-size:13px;color:#f0c040;font-weight:700;margin-bottom:2px">🍴 RestauManager</div>
+    <div class="page-title">Tableau de bord</div>
+    <div class="page-sub">Vue d'ensemble de votre activité</div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-icon">💰</div>
+      <div class="kpi-value" style="color:#22c55e">${fmt(tv)}</div>
+      <div class="kpi-label">Total Ventes</div>
+      <div class="kpi-sub">${ventes.length} transactions</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">🛒</div>
+      <div class="kpi-value" style="color:#f59e0b">${fmt(ta)}</div>
+      <div class="kpi-label">Total Achats</div>
+      <div class="kpi-sub">${achats.length} commandes</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">📈</div>
+      <div class="kpi-value" style="color:${marge>=0?'#22c55e':'#ef4444'}">${fmt(marge)}</div>
+      <div class="kpi-label">Marge brute</div>
+      <div class="kpi-sub">${tv>0?((marge/tv)*100).toFixed(1):0}% du CA</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-icon">📦</div>
+      <div class="kpi-value" style="color:#a78bfa">${fmt(vs)}</div>
+      <div class="kpi-label">Valeur Stock</div>
+      <div class="kpi-sub">${stock.length} articles</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="section-title">📊 Ventes récentes</div>
+    <div class="bar-chart">${bars||'<span style="color:#64748b;font-size:12px">Pas encore de ventes</span>'}</div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="section-title">⚠️ Alertes stock (${alertes.length})</div>
+    ${alertes.length===0
+      ? '<div style="color:#22c55e;font-size:13px">✅ Tous les stocks sont OK</div>'
+      : alertes.map(a=>`<div class="alert-item"><span>${a.nom}</span><span class="td-red">${a.qte} ${a.unite} <span style="color:#64748b">/ seuil ${a.seuil}</span></span></div>`).join('')
+    }
+  </div>
+
+  <div class="card">
+    <div class="section-title">🏆 Top plats</div>
+    ${topPlats||'<span style="color:#64748b;font-size:12px">Pas encore de ventes</span>'}
+  </div>`;
+}
+
+// ─── STOCK ──────────────────────────────────────────────────────────────────
+function renderStock() {
+  const vs = stock.reduce((s,p)=>s+p.qte*p.pu,0);
+  const rows = stock.map(p=>`
+    <tr>
+      <td class="td-name">${p.nom}</td>
+      <td><span class="badge" style="background:${CCAT[p.cat]||'#94a3b8'}22;color:${CCAT[p.cat]||'#94a3b8'};border:1px solid ${CCAT[p.cat]||'#94a3b8'}44">${p.cat}</span></td>
+      <td class="${p.qte<=p.seuil?'td-red':'td-green'}">${p.qte} ${p.unite}</td>
+      <td>${fmt(p.pu)}</td>
+      <td class="td-purple">${fmt(p.qte*p.pu)}</td>
+      <td><button class="btn btn-danger" onclick="delStock(${p.id})">✕</button></td>
+    </tr>`).join('');
+
+  const opts = CATS.map(c=>`<option value="${c}">${c}</option>`).join('');
+
+  return `
+  <div class="page-header">
+    <div class="page-title">📦 Stock</div>
+    <div class="page-sub">Gérez vos inventaires</div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-title">➕ Ajouter un article</div>
+    <div class="form-group"><label>Nom</label><input id="s-nom" placeholder="Ex: Tomates..."/></div>
+    <div class="form-row">
+      <div class="form-group"><label>Catégorie</label><select id="s-cat">${opts}</select></div>
+      <div class="form-group"><label>Unité</label><input id="s-unite" placeholder="kg, L..."/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Quantité</label><input id="s-qte" type="number" placeholder="0"/></div>
+      <div class="form-group"><label>Seuil alerte</label><input id="s-seuil" type="number" placeholder="0"/></div>
+    </div>
+    <div class="form-group"><label>Prix unitaire (€)</label><input id="s-pu" type="number" step="0.01" placeholder="0.00"/></div>
+    <button class="btn btn-primary" onclick="addStock()">Ajouter au stock</button>
+  </div>
+
+  <div class="card">
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Article</th><th>Cat.</th><th>Qté</th><th>Prix</th><th>Valeur</th><th></th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div class="table-footer">Valeur totale : <span class="td-purple">${fmt(vs)}</span></div>
+  </div>`;
+}
+
+// ─── ACHATS ─────────────────────────────────────────────────────────────────
+function renderAchats() {
+  const ta = achats.reduce((s,a)=>s+a.total,0);
+  const rows = [...achats].reverse().map(a=>`
+    <tr>
+      <td>${a.date}</td>
+      <td style="color:#f59e0b;font-weight:600">${a.fourn}</td>
+      <td class="td-name">${a.art}</td>
+      <td>${a.qte}</td>
+      <td>${fmt(a.pu)}</td>
+      <td class="td-yellow">${fmt(a.total)}</td>
+    </tr>`).join('');
+
+  const stockOpts = stock.map(p=>`<option value="${p.nom}">${p.nom}</option>`).join('');
+
+  return `
+  <div class="page-header">
+    <div class="page-title">🛒 Achats</div>
+    <div class="page-sub">Approvisionnement fournisseurs</div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-title">➕ Nouvel achat</div>
+    <div class="form-row">
+      <div class="form-group"><label>Date</label><input id="a-date" type="date" value="${today()}"/></div>
+      <div class="form-group"><label>Fournisseur</label><input id="a-fourn" placeholder="Metro..."/></div>
+    </div>
+    <div class="form-group"><label>Article (stock)</label>
+      <select id="a-art"><option value="">-- choisir --</option>${stockOpts}</select>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Quantité</label><input id="a-qte" type="number" placeholder="0" oninput="calcAchat()"/></div>
+      <div class="form-group"><label>Prix unit. (€)</label><input id="a-pu" type="number" step="0.01" placeholder="0.00" oninput="calcAchat()"/></div>
+    </div>
+    <div class="total-preview" style="margin-bottom:10px">
+      <div class="tl">Total calculé</div>
+      <div class="tv" id="a-total">0,00 €</div>
+    </div>
+    <button class="btn btn-primary" onclick="addAchat()">Enregistrer l'achat</button>
+  </div>
+
+  <div class="card">
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Date</th><th>Fourn.</th><th>Article</th><th>Qté</th><th>PU</th><th>Total</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div class="table-footer">Total achats : <span class="td-yellow">${fmt(ta)}</span></div>
+  </div>`;
+}
+
+// ─── VENTES ─────────────────────────────────────────────────────────────────
+function renderVentes() {
+  const tv = ventes.reduce((s,v)=>s+v.total,0);
+  const rows = [...ventes].reverse().map(v=>`
+    <tr>
+      <td>${v.date}</td>
+      <td class="td-name">${v.plat}</td>
+      <td>${v.qte}</td>
+      <td>${fmt(v.pu)}</td>
+      <td class="td-green">${fmt(v.total)}</td>
+    </tr>`).join('');
+
+  return `
+  <div class="page-header">
+    <div class="page-title">🍽️ Ventes</div>
+    <div class="page-sub">Chiffre d'affaires quotidien</div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="section-title">➕ Nouvelle vente</div>
+    <div class="form-row">
+      <div class="form-group"><label>Date</label><input id="v-date" type="date" value="${today()}"/></div>
+      <div class="form-group"><label>Plat vendu</label><input id="v-plat" placeholder="Pizza..."/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Quantité</label><input id="v-qte" type="number" placeholder="0" oninput="calcVente()"/></div>
+      <div class="form-group"><label>Prix vente (€)</label><input id="v-pu" type="number" step="0.01" placeholder="0.00" oninput="calcVente()"/></div>
+    </div>
+    <div class="total-preview" style="margin-bottom:10px;background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.25)">
+      <div class="tl">Total calculé</div>
+      <div class="tv" style="color:#22c55e" id="v-total">0,00 €</div>
+    </div>
+    <button class="btn btn-primary" onclick="addVente()">Enregistrer la vente</button>
+  </div>
+
+  <div class="card">
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Date</th><th>Plat</th><th>Qté</th><th>PU</th><th>CA</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div class="table-footer">Total CA : <span class="td-green">${fmt(tv)}</span></div>
+  </div>`;
+}
+
+// ─── BILAN ──────────────────────────────────────────────────────────────────
+function renderBilan() {
+  const tv = ventes.reduce((s,v)=>s+v.total,0);
+  const ta = achats.reduce((s,a)=>s+a.total,0);
+  const marge = tv - ta;
+  const vs = stock.reduce((s,p)=>s+p.qte*p.pu,0);
+  const alertes = stock.filter(s=>s.qte<=s.seuil);
+
+  const byPlat = {};
+  ventes.forEach(v=>{ byPlat[v.plat]=(byPlat[v.plat]||0)+v.total; });
+  const ventesRows = Object.entries(byPlat).sort(([,a],[,b])=>b-a)
+    .map(([p,t])=>`<div class="row-between"><span style="color:#cbd5e1">${p}</span><span class="td-green">${fmt(t)}</span></div>`).join('');
+
+  const byFourn = {};
+  achats.forEach(a=>{ byFourn[a.fourn]=(byFourn[a.fourn]||0)+a.total; });
+  const achatsRows = Object.entries(byFourn).sort(([,a],[,b])=>b-a)
+    .map(([f,t])=>`<div class="row-between"><span style="color:#cbd5e1">${f}</span><span class="td-yellow">${fmt(t)}</span></div>`).join('');
+
+  return `
+  <div class="page-header">
+    <div class="page-title">📈 Bilan</div>
+    <div class="page-sub">Analyse financière complète</div>
+  </div>
+
+  <div class="card" style="border-color:${marge>=0?'rgba(34,197,94,0.3)':'rgba(239,68,68,0.3)'};background:${marge>=0?'rgba(34,197,94,0.05)':'rgba(239,68,68,0.05)'};margin-bottom:12px">
+    <div style="color:#94a3b8;font-size:11px;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px">Résultat net</div>
+    <div style="font-size:36px;font-weight:800;color:${marge>=0?'#22c55e':'#ef4444'};line-height:1">${fmt(marge)}</div>
+    <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px">
+      <div class="row-between">
+        <span style="color:#94a3b8;font-size:12px">Taux de marge</span>
+        <span style="color:#f0c040;font-weight:800">${tv>0?((marge/tv)*100).toFixed(1):0}%</span>
+      </div>
+      <div class="row-between">
+        <span style="color:#94a3b8;font-size:12px">Food cost</span>
+        <span style="color:#f59e0b;font-weight:800">${tv>0?((ta/tv)*100).toFixed(1):0}%</span>
+      </div>
+      <div class="row-between">
+        <span style="color:#94a3b8;font-size:12px">Valeur stock</span>
+        <span style="color:#a78bfa;font-weight:800">${fmt(vs)}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="section-title" style="color:#22c55e">💰 Recettes par plat</div>
+    ${ventesRows||'<span style="color:#64748b;font-size:12px">Aucune vente</span>'}
+    <div style="margin-top:10px;padding-top:10px;border-top:2px solid rgba(34,197,94,0.2)" class="row-between">
+      <span style="font-weight:700">TOTAL RECETTES</span>
+      <span class="td-green" style="font-size:16px">${fmt(tv)}</span>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:12px">
+    <div class="section-title" style="color:#f59e0b">🛒 Charges par fournisseur</div>
+    ${achatsRows||'<span style="color:#64748b;font-size:12px">Aucun achat</span>'}
+    <div style="margin-top:10px;padding-top:10px;border-top:2px solid rgba(245,158,11,0.2)" class="row-between">
+      <span style="font-weight:700">TOTAL CHARGES</span>
+      <span class="td-yellow" style="font-size:16px">${fmt(ta)}</span>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="kpi-label">Panier moyen</div>
+      <div class="kpi-value" style="color:#f0c040;font-size:18px">${ventes.length>0?fmt(tv/ventes.length):'—'}</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Alertes stock</div>
+      <div class="kpi-value" style="color:${alertes.length>0?'#ef4444':'#22c55e'};font-size:18px">${alertes.length} / ${stock.length}</div>
+    </div>
+  </div>`;
+}
+
+// ─── ACTIONS ────────────────────────────────────────────────────────────────
+function bindEvents() {}
+
+function addStock() {
+  const nom = document.getElementById('s-nom')?.value?.trim();
+  const cat = document.getElementById('s-cat')?.value;
+  const qte = parseFloat(document.getElementById('s-qte')?.value);
+  const unite = document.getElementById('s-unite')?.value?.trim() || 'unité';
+  const seuil = parseFloat(document.getElementById('s-seuil')?.value) || 0;
+  const pu = parseFloat(document.getElementById('s-pu')?.value) || 0;
+  if (!nom || isNaN(qte)) { alert('Remplis le nom et la quantité !'); return; }
+  stock.push({id:uid(),nom,cat,qte,unite,seuil,pu});
+  save(); render();
+}
+
+function delStock(id) {
+  if (!confirm('Supprimer cet article ?')) return;
+  stock = stock.filter(p=>p.id!==id);
+  save(); render();
+}
+
+function calcAchat() {
+  const q = parseFloat(document.getElementById('a-qte')?.value)||0;
+  const p = parseFloat(document.getElementById('a-pu')?.value)||0;
+  const el = document.getElementById('a-total');
+  if(el) el.textContent = fmt(q*p);
+}
+
+function addAchat() {
+  const date = document.getElementById('a-date')?.value;
+  const fourn = document.getElementById('a-fourn')?.value?.trim();
+  const art = document.getElementById('a-art')?.value;
+  const qte = parseFloat(document.getElementById('a-qte')?.value);
+  const pu = parseFloat(document.getElementById('a-pu')?.value)||0;
+  if (!fourn || !art || isNaN(qte)) { alert('Remplis tous les champs !'); return; }
+  const total = qte * pu;
+  achats.push({id:uid(),date,fourn,art,qte,pu,total});
+  // MAJ stock
+  const idx = stock.findIndex(p=>p.nom===art);
+  if(idx>=0) stock[idx].qte += qte;
+  save(); render();
+}
+
+function calcVente() {
+  const q = parseFloat(document.getElementById('v-qte')?.value)||0;
+  const p = parseFloat(document.getElementById('v-pu')?.value)||0;
+  const el = document.getElementById('v-total');
+  if(el) el.textContent = fmt(q*p);
+}
+
+function addVente() {
+  const date = document.getElementById('v-date')?.value;
+  const plat = document.getElementById('v-plat')?.value?.trim();
+  const qte = parseFloat(document.getElementById('v-qte')?.value);
+  const pu = parseFloat(document.getElementById('v-pu')?.value)||0;
+  if (!plat || isNaN(qte)) { alert('Remplis le plat et la quantité !'); return; }
+  const total = qte * pu;
+  ventes.push({id:uid(),date,plat,qte,pu,total});
+  save(); render();
+}
+
+// ─── INIT ───────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
