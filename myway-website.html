@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>My Way — Restaurant Libanais Dakar</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --sage:#6b8c6b;
+  --sage2:#8aac8a;
+  --sage-light:#e8efe8;
+  --sage-pale:#f2f5f0;
+  --cream:#faf7f2;
+  --warm:#f5efe4;
+  --terracotta:#c4724a;
+  --terra2:#a85c38;
+  --gold:#c9a05a;
+  --gold2:#e0b870;
+  --text:#3d3328;
+  --text2:#6b5f50;
+  --muted:#9e9080;
+  --white:#ffffff;
+  --border:rgba(107,140,107,0.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--cream);color:var(--text);font-family:'Jost',sans-serif;font-weight:300;overflow-x:hidden;}
+
+/* LOADER */
+#loader{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--sage-pale);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;
+  transition:opacity 0.8s ease,visibility 0.8s ease;
+}
+#loader.hide{opacity:0;visibility:hidden;}
+.ld-logo{
+  font-family:'Playfair Display',serif;font-size:38px;font-weight:300;
+  letter-spacing:10px;color:var(--sage);text-transform:uppercase;
+  opacity:0;animation:ldIn 0.8s ease 0.3s forwards;
+}
+.ld-bar{width:180px;height:1px;background:rgba(107,140,107,0.2);overflow:hidden;}
+.ld-fill{height:100%;background:var(--sage);width:0;animation:ldBar 1.8s ease forwards;}
+@keyframes ldIn{to{opacity:1;}}
+@keyframes ldBar{to{width:100%;}}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  padding:28px 60px;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:all 0.5s ease;
+}
+nav.solid{
+  padding:14px 60px;
+  background:rgba(250,247,242,0.96);
+  backdrop-filter:blur(20px);
+  box-shadow:0 1px 30px rgba(107,140,107,0.08);
+  border-bottom:1px solid var(--border);
+}
+.nav-logo{
+  font-family:'Playfair Display',serif;font-size:22px;font-weight:400;
+  letter-spacing:6px;color:var(--sage);text-decoration:none;text-transform:uppercase;
+}
+.nav-links{display:flex;gap:34px;list-style:none;}
+.nav-links a{
+  color:var(--text2);text-decoration:none;font-size:10px;
+  font-weight:500;letter-spacing:2.5px;text-transform:uppercase;transition:color 0.3s;
+}
+.nav-links a:hover{color:var(--sage);}
+.nav-btn{
+  border:1px solid var(--sage);color:var(--sage);
+  padding:9px 22px;font-family:'Jost',sans-serif;font-size:9px;
+  font-weight:500;letter-spacing:3px;text-transform:uppercase;
+  text-decoration:none;transition:all 0.3s;
+}
+.nav-btn:hover{background:var(--sage);color:var(--white);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;}
+.hamburger span{width:24px;height:1.5px;background:var(--sage);transition:all 0.3s;display:block;}
+
+/* MOBILE MENU */
+#mmenu{
+  display:none;position:fixed;inset:0;background:var(--cream);z-index:490;
+  flex-direction:column;align-items:center;justify-content:center;gap:28px;
+}
+#mmenu.open{display:flex;}
+#mmenu a{
+  font-family:'Playfair Display',serif;font-size:30px;font-weight:300;
+  color:var(--text);text-decoration:none;letter-spacing:3px;transition:color 0.3s;
+}
+#mmenu a:hover{color:var(--sage);}
+
+/* HERO */
+#hero{height:100vh;position:relative;display:flex;align-items:flex-end;overflow:hidden;}
+.hero-imgs{
+  position:absolute;inset:0;display:grid;grid-template-columns:1.4fr 0.8fr 0.8fr;
+}
+.hi{overflow:hidden;position:relative;}
+.hi img{width:100%;height:100%;object-fit:cover;transition:transform 8s ease;}
+#hero:hover .hi img{transform:scale(1.04);}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to right,rgba(250,247,242,0.88) 35%,rgba(250,247,242,0.1) 100%),
+    linear-gradient(to top,rgba(250,247,242,0.95) 0%,transparent 40%);
+  z-index:2;
+}
+.hero-content{
+  position:relative;z-index:3;padding:0 60px 90px;max-width:650px;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--sage);
+  margin-bottom:22px;
+}
+.hero-tag::before{content:'';width:30px;height:1px;background:var(--sage);}
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(56px,9vw,118px);font-weight:300;
+  line-height:0.9;letter-spacing:-2px;color:var(--text);margin-bottom:22px;
+}
+.hero-title em{font-style:italic;color:var(--sage);display:block;}
+.hero-desc{
+  font-size:15px;font-weight:300;color:var(--text2);line-height:1.8;
+  max-width:420px;margin-bottom:36px;
+}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;}
+.btn-fill{
+  background:var(--sage);color:var(--white);
+  padding:14px 32px;font-size:9px;font-weight:600;letter-spacing:3px;
+  text-transform:uppercase;text-decoration:none;transition:all 0.3s;display:inline-block;
+}
+.btn-fill:hover{background:var(--sage2);}
+.btn-line{
+  border:1px solid rgba(107,140,107,0.4);color:var(--text2);
+  padding:14px 32px;font-size:9px;font-weight:400;letter-spacing:3px;
+  text-transform:uppercase;text-decoration:none;transition:all 0.3s;display:inline-block;
+}
+.btn-line:hover{border-color:var(--sage);color:var(--sage);}
+.hero-scroll{
+  position:absolute;right:40px;bottom:40px;z-index:3;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.sc-line{width:1px;height:50px;background:linear-gradient(var(--sage),transparent);animation:scPulse 2s infinite;}
+.sc-txt{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);writing-mode:vertical-rl;}
+@keyframes scPulse{0%,100%{opacity:0.4}50%{opacity:1}}
+
+/* MARQUEE */
+.marquee{background:var(--sage);padding:14px 0;overflow:hidden;}
+.mq-inner{display:flex;animation:mq 22s linear infinite;white-space:nowrap;}
+.mq-item{
+  font-family:'Playfair Display',serif;font-style:italic;font-size:14px;
+  color:rgba(255,255,255,0.9);padding:0 30px;
+  display:flex;align-items:center;gap:16px;
+}
+.mq-item::before{content:'✦';font-style:normal;font-size:9px;opacity:0.7;}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* UTILS */
+.wrap{max-width:1280px;margin:0 auto;}
+.slabel{
+  font-size:9px;letter-spacing:5px;text-transform:uppercase;color:var(--sage);
+  display:flex;align-items:center;gap:12px;margin-bottom:18px;
+}
+.slabel::before{content:'';width:28px;height:1px;background:var(--sage);}
+.sh{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(34px,4.5vw,60px);font-weight:300;line-height:1.05;color:var(--text);
+}
+.sh em{font-style:italic;color:var(--sage);}
+.rule{width:50px;height:1px;background:var(--sage);margin:24px 0;}
+.btext{font-size:14px;font-weight:300;color:var(--text2);line-height:1.9;}
+
+/* REVEAL */
+.rv{opacity:0;transform:translateY(22px);transition:opacity 0.85s cubic-bezier(0.16,1,0.3,1),transform 0.85s cubic-bezier(0.16,1,0.3,1);}
+.rv.on{opacity:1;transform:none;}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+
+/* STORY */
+#story{padding:130px 60px;background:var(--cream);}
+.story-grid{display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:center;}
+.story-img-grid{
+  display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;
+  gap:4px;
+}
+.simg{overflow:hidden;position:relative;}
+.simg img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.6s ease;}
+.simg:hover img{transform:scale(1.04);}
+.simg:nth-child(1){grid-row:span 2;}
+.simg:nth-child(1) img{height:100%;min-height:400px;}
+.simg:nth-child(2) img,.simg:nth-child(3) img{height:200px;}
+.story-badge{
+  position:absolute;bottom:-16px;right:-16px;
+  background:var(--terracotta);color:white;
+  padding:18px 22px;text-align:center;z-index:2;
+}
+.story-badge .bn{font-family:'Playfair Display',serif;font-size:44px;font-weight:300;line-height:1;display:block;}
+.story-badge .bl{font-size:8px;letter-spacing:2px;text-transform:uppercase;opacity:0.85;}
+
+/* GALLERY */
+#gallery{padding:0 60px 130px;background:var(--cream);}
+.gallery-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-template-rows:280px 280px;
+  gap:4px;margin-top:50px;
+}
+.gi{overflow:hidden;position:relative;cursor:pointer;}
+.gi:nth-child(1){grid-column:span 2;grid-row:span 2;}
+.gi:nth-child(5){grid-column:span 2;}
+.gi img{width:100%;height:100%;object-fit:cover;transition:transform 0.6s ease;display:block;}
+.gi:hover img{transform:scale(1.06);}
+.gi-ov{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(61,51,40,0.7) 0%,transparent 50%);
+  opacity:0;transition:opacity 0.4s;display:flex;align-items:flex-end;padding:20px;
+}
+.gi:hover .gi-ov{opacity:1;}
+.gi-ov span{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.9);}
+.gallery-more{text-align:center;margin-top:24px;}
+.gallery-more a{
+  font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);
+  text-decoration:none;border-bottom:1px solid var(--border);padding-bottom:2px;
+  transition:all 0.3s;
+}
+.gallery-more a:hover{color:var(--sage);border-color:var(--sage);}
+
+/* MENU */
+#menu{background:var(--warm);padding:130px 60px;}
+.menu-header{text-align:center;margin-bottom:70px;}
+.menu-header .slabel{justify-content:center;}
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.mcat{
+  background:var(--cream);padding:44px 32px;
+  border:1px solid var(--border);transition:all 0.3s;
+}
+.mcat:hover{border-color:rgba(107,140,107,0.35);transform:translateY(-3px);box-shadow:0 12px 40px rgba(107,140,107,0.08);}
+.mcat-icon{font-size:38px;margin-bottom:22px;display:block;}
+.mcat-name{
+  font-family:'Playfair Display',serif;font-size:22px;font-weight:300;
+  color:var(--text);margin-bottom:10px;
+}
+.mcat-desc{font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:24px;}
+.mcat-rule{width:36px;height:1px;background:var(--sage);margin-bottom:20px;}
+.mlist{list-style:none;}
+.mlist li{
+  display:flex;justify-content:space-between;padding:9px 0;
+  border-bottom:1px solid rgba(107,140,107,0.08);font-size:12px;color:var(--text2);
+}
+.mlist li:last-child{border:none;}
+.mlist .pr{color:var(--sage);font-weight:500;}
+.menu-footer{text-align:center;margin-top:52px;}
+
+/* WHY US */
+#why{padding:130px 60px;background:var(--cream);}
+.why-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:60px;}
+.wcard{
+  padding:44px 28px;border:1px solid var(--border);
+  position:relative;overflow:hidden;transition:all 0.4s;
+}
+.wcard:hover{border-color:rgba(107,140,107,0.3);background:var(--sage-pale);}
+.wn{
+  font-family:'Playfair Display',serif;font-size:80px;font-weight:300;
+  color:rgba(107,140,107,0.07);position:absolute;top:10px;right:12px;line-height:1;
+}
+.wicon{font-size:30px;margin-bottom:18px;display:block;}
+.wtitle{
+  font-family:'Playfair Display',serif;font-size:19px;font-weight:300;
+  color:var(--text);margin-bottom:10px;
+}
+.wbody{font-size:12px;color:var(--muted);line-height:1.8;}
+
+/* TRAITEUR */
+#traiteur{background:var(--sage-pale);padding:130px 60px;}
+.traiteur-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;}
+.tlist{list-style:none;margin-top:28px;}
+.tlist li{display:flex;gap:18px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--border);}
+.tlist li:last-child{border:none;}
+.ticon{
+  width:44px;height:44px;border:1px solid rgba(107,140,107,0.25);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px;
+}
+.ttitle{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px;}
+.tdesc{font-size:12px;color:var(--muted);line-height:1.7;}
+.t-imgs{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4px;aspect-ratio:1;}
+.t-img{overflow:hidden;}
+.t-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.5s;}
+.t-img:hover img{transform:scale(1.05);}
+
+/* DELIVERY */
+#delivery{padding:130px 60px;background:var(--cream);}
+.delivery-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;}
+.zones{margin-top:28px;}
+.zone{
+  display:flex;align-items:center;gap:18px;padding:14px 0;
+  border-bottom:1px solid var(--border);transition:padding-left 0.3s;
+}
+.zone:hover{padding-left:8px;}
+.zn{
+  font-family:'Playfair Display',serif;font-size:26px;font-weight:300;
+  color:rgba(107,140,107,0.3);width:34px;flex-shrink:0;
+}
+.zone:hover .zn{color:var(--sage);}
+.zname{font-size:13px;color:var(--text2);}
+.dinfo{
+  background:var(--warm);border:1px solid var(--border);
+  padding:36px;margin-top:28px;
+}
+.dtitle{font-family:'Playfair Display',serif;font-size:20px;color:var(--text);margin-bottom:20px;}
+.drow{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:11px 0;border-bottom:1px solid var(--border);font-size:12px;
+}
+.drow:last-child{border:none;}
+.dlbl{color:var(--muted);}
+.dval{color:var(--sage);font-weight:500;}
+
+/* CONTACT */
+#contact{background:var(--warm);padding:130px 60px;}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;}
+.cdetails{display:flex;flex-direction:column;}
+.citem{
+  display:flex;gap:20px;align-items:flex-start;
+  padding:22px 0;border-bottom:1px solid var(--border);
+}
+.citem:last-child{border:none;}
+.cicon{
+  width:44px;height:44px;border:1px solid rgba(107,140,107,0.2);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+}
+.clabel{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--sage);margin-bottom:5px;}
+.cval{font-size:13px;color:var(--text2);line-height:1.6;}
+.cval a{color:var(--text2);text-decoration:none;transition:color 0.3s;}
+.cval a:hover{color:var(--sage);}
+.socials{display:flex;gap:10px;margin-top:28px;}
+.soc{
+  width:42px;height:42px;border:1px solid rgba(107,140,107,0.2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);text-decoration:none;font-size:11px;
+  font-weight:500;transition:all 0.3s;
+}
+.soc:hover{border-color:var(--sage);color:var(--sage);}
+
+/* FORM */
+.form{display:flex;flex-direction:column;gap:14px;}
+.frow2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.fg{display:flex;flex-direction:column;gap:6px;}
+.fg label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+.fg input,.fg textarea,.fg select{
+  background:var(--cream);border:1px solid var(--border);
+  color:var(--text);padding:12px 16px;font-family:'Jost',sans-serif;
+  font-size:13px;font-weight:300;outline:none;transition:border-color 0.3s;-webkit-appearance:none;
+}
+.fg select option{background:var(--cream);}
+.fg input:focus,.fg textarea:focus,.fg select:focus{border-color:var(--sage);}
+.fg textarea{resize:vertical;min-height:100px;}
+.fbtn{
+  background:var(--sage);color:white;border:none;
+  padding:14px;font-family:'Jost',sans-serif;font-size:9px;
+  font-weight:600;letter-spacing:3px;text-transform:uppercase;
+  cursor:pointer;transition:all 0.3s;margin-top:6px;
+}
+.fbtn:hover{background:var(--sage2);}
+
+/* FOOTER */
+footer{
+  padding:32px 60px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--cream);
+}
+.flogo{
+  font-family:'Playfair Display',serif;font-size:18px;
+  letter-spacing:6px;color:var(--sage);text-decoration:none;text-transform:uppercase;
+}
+.fcopy{font-size:10px;color:var(--muted);letter-spacing:1px;}
+.fnav{display:flex;gap:24px;list-style:none;}
+.fnav a{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.3s;}
+.fnav a:hover{color:var(--sage);}
+
+/* MOBILE */
+@media(max-width:900px){
+  nav,nav.solid{padding:18px 24px;}
+  .nav-links,.nav-btn{display:none;}
+  .hamburger{display:flex;}
+  .hero-content{padding:0 24px 60px;}
+  .hero-title{font-size:54px;}
+  #story,#gallery,#menu,#why,#traiteur,#delivery,#contact{padding:80px 24px;}
+  .story-grid,.traiteur-grid,.delivery-grid,.contact-grid{grid-template-columns:1fr;gap:44px;}
+  .menu-grid,.why-grid{grid-template-columns:1fr;}
+  .gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;}
+  .gi:nth-child(1){grid-column:span 2;grid-row:span 1;}
+  .gi:nth-child(5){grid-column:span 2;}
+  .gi img{height:200px;}
+  .hero-imgs{grid-template-columns:1fr;}
+  .hi:not(:first-child){display:none;}
+  footer{flex-direction:column;gap:12px;text-align:center;padding:24px;}
+  .fnav{display:none;}
+  .hero-scroll{display:none;}
+  .frow2{grid-template-columns:1fr;}
+  .t-imgs{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="ld-logo">My Way</div>
+  <div class="ld-bar"><div class="ld-fill"></div></div>
+</div>
+
+<div id="mmenu">
+  <a href="#story" onclick="cm()">Le Restaurant</a>
+  <a href="#gallery" onclick="cm()">Galerie</a>
+  <a href="#menu" onclick="cm()">Menu</a>
+  <a href="#traiteur" onclick="cm()">Traiteur</a>
+  <a href="#delivery" onclick="cm()">Livraison</a>
+  <a href="#contact" onclick="cm()">Contact</a>
+</div>
+
+<nav id="nav">
+  <a href="#" class="nav-logo">My Way</a>
+  <ul class="nav-links">
+    <li><a href="#story">Le restaurant</a></li>
+    <li><a href="#gallery">Galerie</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#traiteur">Traiteur</a></li>
+    <li><a href="#delivery">Livraison</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="tel:+221338687777" class="nav-btn">Réserver</a>
+  <div class="hamburger" onclick="tm()"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-imgs">
+    <div class="hi"><img src="8769D2B7-6DA2-431F-8C05-64BB170F15A3.png" alt="Salle My Way" style="object-position:center top"/></div>
+    <div class="hi"><img src="IMG_7955.jpeg" alt="Kafta grillée My Way"/></div>
+    <div class="hi"><img src="FDBECFFD-747C-4501-AA24-52B524A7C89A.png" alt="Chawarma My Way"/></div>
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Cuisine Libanaise · Dakar · Depuis 2010</div>
+    <h1 class="hero-title">My<br><em>Way</em></h1>
+    <p class="hero-desc">Entre traditions et modernité, succombez aux trésors de la gastronomie libanaise au cœur des Almadies.</p>
+    <div class="hero-btns">
+      <a href="#menu" class="btn-fill">Découvrir le menu</a>
+      <a href="#contact" class="btn-line">Réserver une table</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="sc-line"></div>
+    <span class="sc-txt">Découvrir</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="mq-inner">
+    <span class="mq-item">Cuisine Libanaise Authentique</span>
+    <span class="mq-item">Mezze & Grillades</span>
+    <span class="mq-item">Pizzeria Artisanale</span>
+    <span class="mq-item">Service Traiteur</span>
+    <span class="mq-item">Livraison à Domicile</span>
+    <span class="mq-item">Almadies · Dakar</span>
+    <span class="mq-item">9h30 – 23h · 6j/7</span>
+    <span class="mq-item">Cuisine Libanaise Authentique</span>
+    <span class="mq-item">Mezze & Grillades</span>
+    <span class="mq-item">Pizzeria Artisanale</span>
+    <span class="mq-item">Service Traiteur</span>
+    <span class="mq-item">Livraison à Domicile</span>
+    <span class="mq-item">Almadies · Dakar</span>
+    <span class="mq-item">9h30 – 23h · 6j/7</span>
+  </div>
+</div>
+
+<!-- STORY -->
+<section id="story">
+  <div class="wrap">
+    <div class="story-grid">
+      <div class="story-img-grid rv" style="position:relative">
+        <div class="simg"><img src="B33E87A9-0BCE-4EFB-B181-1B17FE0F9771.png" alt="Entrée My Way"/></div>
+        <div class="simg"><img src="9E18C7ED-C5C8-48B0-B3B9-BA806E163548.png" alt="Bar My Way"/></div>
+        <div class="simg"><img src="1051B289-D574-4532-A91F-87CC7205728D.png" alt="Décor My Way"/></div>
+        <div class="story-badge"><span class="bn">15</span><span class="bl">Ans d'excellence</span></div>
+      </div>
+      <div>
+        <div class="slabel rv">Notre histoire</div>
+        <h2 class="sh rv d1">L'art de vivre<br><em>à la libanaise</em></h2>
+        <div class="rule rv d2"></div>
+        <p class="btext rv d2">Au cœur des Almadies, My Way s'est imposé comme la référence de la gastronomie libanaise à Dakar. Depuis 2010, notre restaurant cultive l'art de recevoir avec passion, générosité et authenticité.</p>
+        <p class="btext rv d3" style="margin-top:14px">Notre cadre unique — olivier centenaire, lampes en raphia, mural tropical — crée une atmosphère chaleureuse et chic, parfaite pour tout moment de partage.</p>
+        <div style="display:flex;gap:14px;margin-top:32px" class="rv d4">
+          <a href="#gallery" class="btn-fill">Voir la galerie</a>
+          <a href="https://my.matterport.com/show/?m=MVhW9uZWGaJ" target="_blank" class="btn-line">Visite 3D</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="wrap">
+    <div class="rv">
+      <div class="slabel">Galerie</div>
+      <h2 class="sh">Notre <em>univers</em></h2>
+    </div>
+    <div class="gallery-grid">
+      <div class="gi rv"><img src="927F69A5-42A0-4721-A45B-802B1BCD4F9B.png" alt="Salle My Way"/><div class="gi-ov"><span>Notre salle</span></div></div>
+      <div class="gi rv d1"><img src="IMG_7958.jpeg" alt="Houmous My Way"/><div class="gi-ov"><span>Houmous maison</span></div></div>
+      <div class="gi rv d2"><img src="4882557E-3E22-4DAD-8EF3-438593E056AC.jpeg" alt="Falafel My Way"/><div class="gi-ov"><span>Falafel</span></div></div>
+      <div class="gi rv d1"><img src="BF6BACF9-734E-4949-BBD4-557C06EA5C28.png" alt="Lampes My Way"/><div class="gi-ov"><span>Notre ambiance</span></div></div>
+      <div class="gi rv d2"><img src="FDBECFFD-747C-4501-AA24-52B524A7C89A.png" alt="Chawarma My Way"/><div class="gi-ov"><span>Chawarma</span></div></div>
+    </div>
+    <div class="gallery-more rv">
+      <a href="https://www.instagram.com/mywayrestaurant/" target="_blank">Voir plus sur Instagram →</a>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section id="menu">
+  <div class="wrap">
+    <div class="menu-header rv">
+      <div class="slabel">Notre carte</div>
+      <h2 class="sh">Saveurs <em>d'Orient</em></h2>
+    </div>
+    <div class="menu-grid">
+      <div class="mcat rv">
+        <span class="mcat-icon">🫒</span>
+        <div class="mcat-name">Mezze & Entrées</div>
+        <p class="mcat-desc">La tradition libanaise à travers ses plus beaux mezze, préparés minute avec des produits frais.</p>
+        <div class="mcat-rule"></div>
+        <ul class="mlist">
+          <li><span>Houmous maison</span><span class="pr">3 500 F</span></li>
+          <li><span>Houmous épicé</span><span class="pr">3 500 F</span></li>
+          <li><span>Fattoush</span><span class="pr">4 000 F</span></li>
+          <li><span>Sambousek viande</span><span class="pr">4 500 F</span></li>
+          <li><span>Kebbé frite</span><span class="pr">4 500 F</span></li>
+          <li><span>Falafel maison</span><span class="pr">4 000 F</span></li>
+        </ul>
+      </div>
+      <div class="mcat rv d1">
+        <span class="mcat-icon">🔥</span>
+        <div class="mcat-name">Grillades & Plats</div>
+        <p class="mcat-desc">Viandes tendres grillées à la braise selon la tradition ancestrale libanaise.</p>
+        <div class="mcat-rule"></div>
+        <ul class="mlist">
+          <li><span>Chawarma poulet</span><span class="pr">6 500 F</span></li>
+          <li><span>Kafta grillée</span><span class="pr">8 000 F</span></li>
+          <li><span>Poulet à l'ail</span><span class="pr">9 500 F</span></li>
+          <li><span>Grillades mixtes</span><span class="pr">14 000 F</span></li>
+          <li><span>Agneau mariné</span><span class="pr">16 000 F</span></li>
+          <li><span>Skewers de steak</span><span class="pr">13 000 F</span></li>
+        </ul>
+      </div>
+      <div class="mcat rv d2">
+        <span class="mcat-icon">🍕</span>
+        <div class="mcat-name">Pizzeria & Boissons</div>
+        <p class="mcat-desc">Pidé, pizzas et manakish artisanaux, boissons fraîches et cocktails maison.</p>
+        <div class="mcat-rule"></div>
+        <ul class="mlist">
+          <li><span>Pidé viande hachée</span><span class="pr">5 500 F</span></li>
+          <li><span>Pizza Margherita</span><span class="pr">6 000 F</span></li>
+          <li><span>Manakish zaatar</span><span class="pr">3 500 F</span></li>
+          <li><span>Pizza labneh</span><span class="pr">6 000 F</span></li>
+          <li><span>Jus frais pressé</span><span class="pr">2 500 F</span></li>
+          <li><span>Cocktails maison</span><span class="pr">4 000 F</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="menu-footer rv">
+      <a href="https://www.restaurantmyway.com/pdf/my-way-menu-restau.pdf" target="_blank" class="btn-fill">Menu complet PDF</a>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="wrap">
+    <div class="rv">
+      <div class="slabel">L'expérience My Way</div>
+      <h2 class="sh">Ce qui nous rend <em>uniques</em></h2>
+    </div>
+    <div class="why-grid">
+      <div class="wcard rv"><span class="wn">01</span><span class="wicon">🌿</span><div class="wtitle">Fraîcheur absolue</div><p class="wbody">Chaque plat préparé à la commande. Ingrédients sélectionnés chaque matin.</p></div>
+      <div class="wcard rv d1"><span class="wn">02</span><span class="wicon">🫒</span><div class="wtitle">L'olivier centenaire</div><p class="wbody">Au cœur de notre espace, un olivier majestueux symbole de notre héritage libanais.</p></div>
+      <div class="wcard rv d2"><span class="wn">03</span><span class="wicon">✨</span><div class="wtitle">Décor signature</div><p class="wbody">Lampes en raphia, mural tropical, bar rouge — une atmosphère unique et mémorable.</p></div>
+      <div class="wcard rv d3"><span class="wn">04</span><span class="wicon">🍽️</span><div class="wtitle">Art de recevoir</div><p class="wbody">Un service chaleureux et attentionné pour faire de chaque visite un moment d'exception.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- TRAITEUR -->
+<section id="traiteur">
+  <div class="wrap">
+    <div class="traiteur-grid">
+      <div>
+        <div class="slabel rv">Service traiteur</div>
+        <h2 class="sh rv d1">Vos événements,<br><em>notre signature</em></h2>
+        <div class="rule rv d2"></div>
+        <p class="btext rv d2">De l'intime au grandiose, My Way sublime chaque événement. Réceptions privées, mariages, corporate — notre équipe crée des moments d'exception à votre image.</p>
+        <ul class="tlist">
+          <li class="rv d2"><div class="ticon">🎊</div><div><div class="ttitle">Mariages & Cérémonies</div><div class="tdesc">Menus sur mesure, service impeccable pour le plus beau jour.</div></div></li>
+          <li class="rv d3"><div class="ticon">💼</div><div><div class="ttitle">Événements Corporate</div><div class="tdesc">Business lunches, cocktails d'entreprise et séminaires.</div></div></li>
+          <li class="rv d3"><div class="ticon">🏛️</div><div><div class="ttitle">Privatisation</div><div class="tdesc">Nos espaces entièrement dédiés à votre événement.</div></div></li>
+          <li class="rv d4"><div class="ticon">🚗</div><div><div class="ttitle">Traiteur à domicile</div><div class="tdesc">Notre équipe se déplace avec tout le nécessaire.</div></div></li>
+        </ul>
+        <a href="#contact" class="btn-fill rv" style="display:inline-block;margin-top:28px">Demander un devis</a>
+      </div>
+      <div class="t-imgs rv d2">
+        <div class="t-img"><img src="8FF5E4FE-ABE2-44AE-9751-1539574E8A61.png" alt="Salle My Way"/></div>
+        <div class="t-img"><img src="A9B1EE87-F9AD-4136-91E7-F1C2B38C6E46.png" alt="Décor My Way"/></div>
+        <div class="t-img"><img src="5DA2CBF9-E1CC-4E6F-B0B2-D650F0A5AF1B.png" alt="Chawarma"/></div>
+        <div class="t-img"><img src="IMG_7955.jpeg" alt="Plat My Way"/></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVERY -->
+<section id="delivery">
+  <div class="wrap">
+    <div class="delivery-grid">
+      <div>
+        <div class="slabel rv">Livraison</div>
+        <h2 class="sh rv d1">My Way<br><em>chez vous</em></h2>
+        <div class="rule rv d2"></div>
+        <p class="btext rv d2">Savourez nos plats libanais sans vous déplacer. Livraison dans toute la région dakaroise, 6 jours sur 7.</p>
+        <div class="dinfo rv d3">
+          <div class="dtitle">Informations</div>
+          <div class="drow"><span class="dlbl">Horaires</span><span class="dval">11h – 23h · 6j/7</span></div>
+          <div class="drow"><span class="dlbl">Commande</span><span class="dval">77 485 31 34</span></div>
+          <div class="drow"><span class="dlbl">Plateforme</span><span class="dval"><a href="https://dakarfooddelivery.com/restaurant/restaurant-detail/my-way" target="_blank" style="color:var(--sage)">Dakar Food Delivery</a></span></div>
+        </div>
+      </div>
+      <div>
+        <div class="slabel rv">Zones desservies</div>
+        <div class="zones">
+          <div class="zone rv"><span class="zn">01</span><span class="zname">Almadies · Ngor · Virage</span></div>
+          <div class="zone rv d1"><span class="zn">02</span><span class="zname">Ouakam · Mamelle · Yoff</span></div>
+          <div class="zone rv d2"><span class="zn">03</span><span class="zname">Corniche Ouest · Fann</span></div>
+          <div class="zone rv d3"><span class="zn">04</span><span class="zname">Foire · Mermoz · Point E · Liberté</span></div>
+          <div class="zone rv d4"><span class="zn">05</span><span class="zname">Médina · Parcelles · Grand Yoff</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div>
+        <div class="slabel rv">Nous trouver</div>
+        <h2 class="sh rv d1">Venez nous<br><em>rendre visite</em></h2>
+        <div class="rule rv d2"></div>
+        <div class="cdetails">
+          <div class="citem rv d2"><div class="cicon">📍</div><div><div class="clabel">Adresse</div><div class="cval">Route des Almadies (près Auchan)<br>Dakar, Sénégal</div></div></div>
+          <div class="citem rv d3"><div class="cicon">📞</div><div><div class="clabel">Téléphone</div><div class="cval"><a href="tel:+221338687777">33 868 77 77</a> · <a href="tel:+221774853134">77 485 31 34</a></div></div></div>
+          <div class="citem rv d3"><div class="cicon">🕐</div><div><div class="clabel">Horaires</div><div class="cval">Lundi – Samedi · 9h30 – 23h</div></div></div>
+          <div class="citem rv d4"><div class="cicon">✉️</div><div><div class="clabel">Email</div><div class="cval"><a href="mailto:mywaydakar@gmail.com">mywaydakar@gmail.com</a></div></div></div>
+        </div>
+        <div class="socials rv">
+          <a href="https://www.facebook.com/MYWAYRESTAU/" target="_blank" class="soc">Fb</a>
+          <a href="https://www.instagram.com/mywayrestaurant/" target="_blank" class="soc">Ig</a>
+        </div>
+      </div>
+      <div>
+        <div class="slabel rv">Réservation</div>
+        <h3 class="sh rv d1" style="font-size:30px">Réserver<br><em>une table</em></h3>
+        <div style="height:20px"></div>
+        <div class="form rv d2">
+          <div class="frow2">
+            <div class="fg"><label>Prénom</label><input type="text" placeholder="Votre prénom"/></div>
+            <div class="fg"><label>Nom</label><input type="text" placeholder="Votre nom"/></div>
+          </div>
+          <div class="fg"><label>Téléphone</label><input type="tel" placeholder="+221 xx xxx xx xx"/></div>
+          <div class="frow2">
+            <div class="fg"><label>Date</label><input type="date"/></div>
+            <div class="fg"><label>Heure</label><input type="time" min="09:30" max="23:00"/></div>
+          </div>
+          <div class="fg"><label>Personnes</label>
+            <select>
+              <option>1 – 2 personnes</option>
+              <option>3 – 4 personnes</option>
+              <option>5 – 8 personnes</option>
+              <option>9 – 15 personnes</option>
+              <option>+ de 15 personnes</option>
+            </select>
+          </div>
+          <div class="fg"><label>Message</label><textarea placeholder="Occasion spéciale, allergies..."></textarea></div>
+          <button class="fbtn" onclick="sf(this)">Envoyer la demande</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="#" class="flogo">My Way</a>
+  <span class="fcopy">© 2026 Restaurant My Way · Dakar, Sénégal</span>
+  <ul class="fnav">
+    <li><a href="#story">Le restaurant</a></li>
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#traiteur">Traiteur</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</footer>
+
+<script>
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('loader').classList.add('hide'),2000));
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('solid',scrollY>60));
+function tm(){document.getElementById('mmenu').classList.toggle('open');}
+function cm(){document.getElementById('mmenu').classList.remove('open');}
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('on');}),{threshold:0.1});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+function sf(b){b.textContent='✓ Demande envoyée !';b.style.background='#6b8c6b';setTimeout(()=>{b.textContent='Envoyer la demande';b.style.background='';},3000);}
+</script>
+</body>
+</html>
